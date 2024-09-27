@@ -1,10 +1,13 @@
 import os
 from sys import meta_path
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for,Response, send_file
 from werkzeug.utils import secure_filename
 from learn import app
-from database import fs
+from .database import fs
+import io
+from bson import ObjectId
+
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -15,6 +18,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 
 
 @app.route('/upload_image', methods=['POST'])
@@ -44,6 +52,19 @@ def upload_image():
     return "Неправильний формат файлу!"
 
 
+@app.route('/get_image/<file_id>', methods=['GET'])
+def get_image(file_id):
+    try:
+        # Знайти зображення у MongoDB за _id
+        image_file = fs.get(ObjectId(file_id))
+
+        # Повернути зображення у відповідному форматі
+        return send_file(io.BytesIO(image_file.read()), mimetype='image/png')
+
+    except Exception as e:
+        return Response(f"Помилка: {str(e)}", status=404)
+
+
 @app.route('/image', methods=['GET'])
 def get_images():
 
@@ -57,6 +78,4 @@ def get_images():
 
     return render_template('images.html', files=file_list)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+
