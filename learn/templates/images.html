@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завантажені зображення</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .image-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Завантажені зображення</h1>
+
+<div class="gallery">
+    {% for file in files %}
+    <div class="image-card">
+        <img src="/get_image/{{ file.file_id }}" alt="{{ file.filename }}">
+        <p>{{ file.filename }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
