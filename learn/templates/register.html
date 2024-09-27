@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Реєстрація</title>
+</head>
+<body>
+    <h1>Реєстрація</h1>
+    <form method="POST" action="{{ url_for('auth.register') }}">
+        <label for="username">Користувач</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Зареєструватися</button>
+    </form>
+    <a href="{{ url_for('auth.login') }}">Увійти</a>
+</body>
+</html>
